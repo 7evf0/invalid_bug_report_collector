@@ -1,0 +1,6 @@
+data.json
+events.json
+
+venv/
+.env
+no-code-fix/

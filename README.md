@@ -10,7 +10,7 @@ It uses GitHub’s **Issues API** and **Issue Timeline API** to detect label his
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### 1. Clone the repository
 
@@ -33,7 +33,7 @@ pip install requests python-dotenv
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Create a `.env` file in the same directory as the script:
 
@@ -48,7 +48,7 @@ GITHUB_REPO=your_repo
 
 ---
 
-## ▶️ Usage
+## Usage
 
 Basic run:
 
@@ -76,7 +76,7 @@ python github.py --owner tensorflow --repo tensorflow
 
 ---
 
-## 🧾 Command-Line Arguments
+## Command-Line Arguments
 
 | Argument             | Description                           | Default         |
 | -------------------- | ------------------------------------- | --------------- |
@@ -87,7 +87,7 @@ python github.py --owner tensorflow --repo tensorflow
 
 ---
 
-## 💡 How Filtering Works (Short Explanation)
+## How Filtering Works (Short Explanation)
 
 For each closed issue:
 
@@ -103,7 +103,7 @@ This identifies issues where the label was removed and **stayed removed**.
 
 ---
 
-## 🚦 Rate Limit Behavior
+## Rate Limit Behavior
 
 * Timeline requests are expensive, so rate limits will occur for large repos.
 * When the rate limit is hit, the script **stops gracefully** and **saves all collected issues so far** to the output JSON file.

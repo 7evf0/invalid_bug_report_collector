@@ -25,7 +25,7 @@ def get_github_token():
     return token
 
 
-def fetch_closed_issues(owner: str, repo: str, token: str):
+def fetch_closed_issues(owner: str, repo: str, data_output: str, bug_label: str, token: str):
     """
     Fetch closed issues page-by-page until we collect at least 1 non-PR issue.
     Returns a list (possibly length 1).
@@ -84,13 +84,13 @@ def fetch_closed_issues(owner: str, repo: str, token: str):
                 # fetch_issue_timeline signals rate limit via RuntimeError
                 print(str(e), file=sys.stderr)
                 # stop looping, but keep collected issues
-                with open('data2.json', 'w') as f:
+                with open(data_output, 'w') as f:
                     json.dump(collected, f, indent=2)
                 return collected
             bug_events = [
                 e for e in events
                 if e.get("event") in ("labeled", "unlabeled")
-                and e.get("label", {}).get("name") == "type:bug"
+                and e.get("label", {}).get("name") == bug_label
             ]
 
             # 1) If there are no bug events at all -> never had type:bug
@@ -108,13 +108,13 @@ def fetch_closed_issues(owner: str, repo: str, token: str):
                 # Last event was 'labeled', so bug is still active or re-added later
                 continue
 
-            print(f"Found issue #{issue.get('number')} with initially labelled as 'type:bug' but then unlabelled from 'type:bug'", file=sys.stderr)
+            print(f"Found issue #{issue.get('number')} with initially labelled as '{bug_label}' but then unlabelled from '{bug_label}'", file=sys.stderr)
             collected.append(issue)
 
         page += 1
 
     # store raw JSON
-    with open('data2.json', 'w') as f:
+    with open(data_output, 'w') as f:
         json.dump(collected, f, indent=2)
 
     return collected
@@ -145,13 +145,6 @@ def main():
         number = issue.get("number")
         title = issue.get("title")
         print(f"- #{number}: {title}")
-
-    """ timeline = fetch_issue_timeline(args.owner, args.repo, 70311, token)
-    print(f"\nTimeline for issue:")
-    for event in timeline:
-        event_type = event.get("event")
-        created_at = event.get("created_at")
-        print(f"- {event_type} at {created_at}") """
 
 if __name__ == "__main__":
     main()
